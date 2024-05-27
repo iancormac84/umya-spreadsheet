@@ -1,6 +1,8 @@
 use quick_xml::escape::*;
 use quick_xml::events::{BytesEnd, BytesStart, BytesText, Event};
 use quick_xml::Writer;
+use zip::unstable::write::FileOptionsExt;
+use zip::write::{FileOptionExtension, FileOptions};
 use std::borrow::Cow;
 use std::io;
 use std::io::{Cursor, Write};
@@ -59,7 +61,7 @@ pub(crate) fn write_new_line(writer: &mut Writer<Cursor<Vec<u8>>>) {
     write_text_node(writer, "\r\n");
 }
 
-pub(crate) fn make_file_from_writer<W: io::Seek + io::Write>(
+pub(crate) fn make_file_from_writer<W: io::Seek + io::Write> (
     path: &str,
     arv: &mut zip::ZipWriter<W>,
     writer: Writer<Cursor<Vec<u8>>>,
@@ -76,12 +78,12 @@ pub(crate) fn make_file_from_bin<W: io::Seek + io::Write>(
     dir: Option<&str>,
     is_light: &bool,
 ) -> Result<(), io::Error> {
-    let zip_opt = if *is_light {
-        zip::write::SimpleFileOptions::default().compression_method(zip::CompressionMethod::Stored)
+    let zip_opt: FileOptions<()> = if *is_light {
+        zip::write::FileOptions::default().compression_method(zip::CompressionMethod::Stored)
     } else {
         zip::write::SimpleFileOptions::default().compression_method(zip::CompressionMethod::DEFLATE)
     };
-    arv.start_file(to_path(path, dir), zip_opt)?;
+    arv.start_file(&*to_path(path, dir), zip_opt)?;
     arv.write_all(writer)
 }
 
