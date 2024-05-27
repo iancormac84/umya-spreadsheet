@@ -1,5 +1,6 @@
 use helper::const_str::*;
 use quick_xml::Writer;
+use zip::result::ZipResult;
 use std::io;
 use std::io::Cursor;
 use structs::Spreadsheet;
@@ -21,6 +22,11 @@ impl<W: io::Seek + io::Write> WriterManager<W> {
             is_light: false,
             table_no: 0,
         }
+    }
+
+    #[inline]
+    pub fn finish(mut self) -> ZipResult<W> {
+        Ok(self.arv.finish()?)
     }
 
     #[inline]

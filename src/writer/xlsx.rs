@@ -170,7 +170,7 @@ fn make_buffer(spreadsheet: &Spreadsheet, is_light: bool) -> Result<std::vec::Ve
     // Add Content_Types
     content_types::write(spreadsheet, &mut writer_manager)?;
 
-    let result = writer_manager.get_arv_mut().finish()?;
+    let result = writer_manager.finish()?;
     Ok(result.into_inner())
 }
 
