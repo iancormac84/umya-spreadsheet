@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use indexmap::IndexMap;
+
 use super::{
     Cell,
     CellValue,
@@ -22,7 +24,7 @@ use crate::{
 
 #[derive(Clone, Default, Debug)]
 pub struct Cells {
-    map:                HashMap<(u32, u32), Box<Cell>>,
+    map:                IndexMap<(u32, u32), Box<Cell>>,
     default_cell_value: CellValue,
     default_style:      Style,
 }
@@ -74,15 +76,15 @@ impl Cells {
 
     #[inline]
     #[must_use]
-    pub fn collection_to_hashmap(&self) -> &HashMap<(u32, u32), Box<Cell>> {
+    pub fn collection_to_map(&self) -> &IndexMap<(u32, u32), Box<Cell>> {
         &self.map
     }
 
     #[inline]
     #[must_use]
-    #[deprecated(since = "3.0.0", note = "Use collection_to_hashmap()")]
-    pub fn get_collection_to_hashmap(&self) -> &HashMap<(u32, u32), Box<Cell>> {
-        self.collection_to_hashmap()
+    #[deprecated(since = "3.0.0", note = "Use collection_to_map()")]
+    pub fn get_collection_to_map(&self) -> &IndexMap<(u32, u32), Box<Cell>> {
+        self.collection_to_map()
     }
 
     #[inline]
@@ -119,7 +121,7 @@ impl Cells {
 
     #[inline]
     #[must_use]
-    pub fn collection_by_column_to_hashmap(&self, column_num: u32) -> HashMap<u32, &Cell> {
+    pub fn collection_by_column_to_hashmap(&self, column_num: u32) -> IndexMap<u32, &Cell> {
         self.map
             .iter()
             .filter(|(k, _v)| k.1 == column_num)
@@ -130,13 +132,13 @@ impl Cells {
     #[inline]
     #[must_use]
     #[deprecated(since = "3.0.0", note = "Use collection_by_column_to_hashmap()")]
-    pub fn get_collection_by_column_to_hashmap(&self, column_num: u32) -> HashMap<u32, &Cell> {
+    pub fn get_collection_by_column_to_hashmap(&self, column_num: u32) -> IndexMap<u32, &Cell> {
         self.collection_by_column_to_hashmap(column_num)
     }
 
     #[inline]
     #[must_use]
-    pub fn collection_by_row_to_hashmap(&self, row_num: u32) -> HashMap<u32, &Cell> {
+    pub fn collection_by_row_to_hashmap(&self, row_num: u32) -> IndexMap<u32, &Cell> {
         self.map
             .iter()
             .filter(|(k, _v)| k.0 == row_num)
@@ -147,19 +149,19 @@ impl Cells {
     #[inline]
     #[must_use]
     #[deprecated(since = "3.0.0", note = "Use collection_by_row_to_hashmap()")]
-    pub fn get_collection_by_row_to_hashmap(&self, row_num: u32) -> HashMap<u32, &Cell> {
+    pub fn get_collection_by_row_to_hashmap(&self, row_num: u32) -> IndexMap<u32, &Cell> {
         self.collection_by_row_to_hashmap(row_num)
     }
 
     #[inline]
-    pub(crate) fn collection_to_hashmap_mut(&mut self) -> &mut HashMap<(u32, u32), Box<Cell>> {
+    pub(crate) fn collection_to_map_mut(&mut self) -> &mut IndexMap<(u32, u32), Box<Cell>> {
         &mut self.map
     }
 
     #[inline]
-    #[deprecated(since = "3.0.0", note = "Use collection_to_hashmap_mut()")]
-    pub(crate) fn get_collection_to_hashmap_mut(&mut self) -> &mut HashMap<(u32, u32), Box<Cell>> {
-        self.collection_to_hashmap_mut()
+    #[deprecated(since = "3.0.0", note = "Use collection_to_map_mut()")]
+    pub(crate) fn get_collection_to_map_mut(&mut self) -> &mut IndexMap<(u32, u32), Box<Cell>> {
+        self.collection_to_map_mut()
     }
 
     #[must_use]
@@ -287,7 +289,7 @@ impl Cells {
     #[inline]
     pub(crate) fn remove(&mut self, col_num: u32, row_num: u32) -> bool {
         let k = (row_num, col_num);
-        self.map.remove(&k).is_some()
+        self.map.swap_remove(&k).is_some()
     }
 
     #[must_use]
@@ -340,7 +342,7 @@ impl Cells {
 
     pub(crate) fn rebuild_map(&mut self) {
         self.map = self
-            .collection_to_hashmap_mut()
+            .collection_to_map_mut()
             .iter_mut()
             .map(|(_, cell)| {
                 (
@@ -364,7 +366,7 @@ impl AdjustmentCoordinate for Cells {
         offset_row_num: u32,
     ) {
         // update cell
-        for ((..), cell) in self.collection_to_hashmap_mut() {
+        for ((..), cell) in self.collection_to_map_mut() {
             cell.adjustment_insert_coordinate(
                 root_col_num,
                 offset_col_num,
@@ -414,7 +416,7 @@ impl AdjustmentCoordinateWith2Sheet for Cells {
         root_row_num: u32,
         offset_row_num: u32,
     ) {
-        for ((..), cell) in self.collection_to_hashmap_mut() {
+        for ((..), cell) in self.collection_to_map_mut() {
             cell.adjustment_insert_coordinate_with_2sheet(
                 self_sheet_name,
                 sheet_name,
@@ -436,7 +438,7 @@ impl AdjustmentCoordinateWith2Sheet for Cells {
         root_row_num: u32,
         offset_row_num: u32,
     ) {
-        for ((..), cell) in self.collection_to_hashmap_mut() {
+        for ((..), cell) in self.collection_to_map_mut() {
             cell.adjustment_remove_coordinate_with_2sheet(
                 self_sheet_name,
                 sheet_name,

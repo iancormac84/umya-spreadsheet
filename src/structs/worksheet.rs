@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use indexmap::IndexMap;
+
 use crate::{
     StringValue,
     helper::{
@@ -248,26 +250,26 @@ impl Worksheet {
 
     #[inline]
     #[must_use]
-    pub fn collection_to_hashmap(&self) -> &HashMap<(u32, u32), Box<Cell>> {
-        self.cells.collection_to_hashmap()
+    pub fn collection_to_map(&self) -> &IndexMap<(u32, u32), Box<Cell>> {
+        self.cells.collection_to_map()
     }
 
     #[inline]
     #[must_use]
-    #[deprecated(since = "3.0.0", note = "Use collection_to_hashmap()")]
-    pub fn get_collection_to_hashmap(&self) -> &HashMap<(u32, u32), Box<Cell>> {
-        self.collection_to_hashmap()
+    #[deprecated(since = "3.0.0", note = "Use collection_to_map()")]
+    pub fn get_collection_to_map(&self) -> &IndexMap<(u32, u32), Box<Cell>> {
+        self.collection_to_map()
     }
 
     #[inline]
-    pub fn collection_to_hashmap_mut(&mut self) -> &mut HashMap<(u32, u32), Box<Cell>> {
-        self.cells.collection_to_hashmap_mut()
+    pub fn collection_to_map_mut(&mut self) -> &mut IndexMap<(u32, u32), Box<Cell>> {
+        self.cells.collection_to_map_mut()
     }
 
     #[inline]
-    #[deprecated(since = "3.0.0", note = "Use collection_to_hashmap_mut()")]
-    pub fn get_collection_to_hashmap_mut(&mut self) -> &mut HashMap<(u32, u32), Box<Cell>> {
-        self.collection_to_hashmap_mut()
+    #[deprecated(since = "3.0.0", note = "Use collection_to_map_mut()")]
+    pub fn get_collection_to_map_mut(&mut self) -> &mut IndexMap<(u32, u32), Box<Cell>> {
+        self.collection_to_map_mut()
     }
 
     pub(crate) fn cells_stream(
@@ -414,27 +416,27 @@ impl Worksheet {
 
     #[inline]
     #[must_use]
-    pub fn collection_by_column_to_hashmap(&self, column_num: u32) -> HashMap<u32, &Cell> {
+    pub fn collection_by_column_to_hashmap(&self, column_num: u32) -> IndexMap<u32, &Cell> {
         self.cells.collection_by_column_to_hashmap(column_num)
     }
 
     #[inline]
     #[must_use]
     #[deprecated(since = "3.0.0", note = "Use collection_by_column_to_hashmap()")]
-    pub fn get_collection_by_column_to_hashmap(&self, column_num: u32) -> HashMap<u32, &Cell> {
+    pub fn get_collection_by_column_to_hashmap(&self, column_num: u32) -> IndexMap<u32, &Cell> {
         self.collection_by_column_to_hashmap(column_num)
     }
 
     #[inline]
     #[must_use]
-    pub fn collection_by_row_to_hashmap(&self, row_num: u32) -> HashMap<u32, &Cell> {
+    pub fn collection_by_row_to_hashmap(&self, row_num: u32) -> IndexMap<u32, &Cell> {
         self.cells.collection_by_row_to_hashmap(row_num)
     }
 
     #[inline]
     #[must_use]
     #[deprecated(since = "3.0.0", note = "Use collection_by_row_to_hashmap()")]
-    pub fn get_collection_by_row_to_hashmap(&self, row_num: u32) -> HashMap<u32, &Cell> {
+    pub fn get_collection_by_row_to_hashmap(&self, row_num: u32) -> IndexMap<u32, &Cell> {
         self.collection_by_row_to_hashmap(row_num)
     }
 
